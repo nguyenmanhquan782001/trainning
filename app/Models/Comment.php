@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Comment extends Model
 {
     use HasFactory;
+    public  function  getParentId () {
+        return $this->hasMany(Comment::class , 'parent_id');
+    }
 }

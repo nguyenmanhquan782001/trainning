@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Post extends Model
 {
     use HasFactory;
+    protected $table = "posts";
+    protected $primaryKey = "id";
+    protected $fillable = ['title' , 'content' , 'slug'];
+    public  function getInfoUser(){
+        return $this->belongsTo(User::class , 'user_id');
+    }
 }

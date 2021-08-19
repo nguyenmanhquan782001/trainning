@@ -40,7 +40,7 @@
 
 
 <div id="dropDownSelect1"></div>
-
+@include('sweetalert::alert')
 
 </body>
 </html>

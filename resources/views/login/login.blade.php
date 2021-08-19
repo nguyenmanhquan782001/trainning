@@ -1,5 +1,8 @@
 @extends("login.layout")
 @section("login_or_register")
+    @if(session("success"))
+
+    @endif
     <span class="login100-form-title p-b-41">
 					Account Login
 				</span>
@@ -25,9 +28,20 @@
             <button type="submit" class="login100-form-btn">
                 Login
             </button>
-            <a href="{{ route("register.view") }}" class="login100-form-btn">
+            <a href="{{ route("register.view") }}" class="login100-form-btn" style="margin-left: 3px">
                 Register
             </a>
+           <div style="margin-top: 20px">
+               <a class="btn btn-danger" href="{{ route("login.redirect") }}">Login with google</a>
+               <a class="btn btn-primary" href="{{ route("login.redirect") }}">Login with Facebook</a>
+           </div>
+
+            <br>
+            <div style="margin-top: 20px ; opacity: 0.7" >
+                <span> Google + </span>
+                <a style="color: blue" href="">Quên mật khẩu</a>
+            </div>
+
         </div>
 
     </form>

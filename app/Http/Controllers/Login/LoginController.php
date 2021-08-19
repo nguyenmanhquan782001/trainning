@@ -9,23 +9,17 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Repositories\Register\RegisterInterface;
+use Laravel\Socialite\Facades\Socialite;
+
 
 class LoginController extends Controller
 {
-    public $register;
-
-    public function __construct(RegisterInterface $register)
-    {
-        $this->register = $register;
-    }
-
     public function login()
     {
         return view("login.login");
     }
 
-    public function postLogin(PostLogin $request)
+    public function store(PostLogin $request)
     {
         $email = $request->input("email");
         $password = $request->input("password");
@@ -34,35 +28,45 @@ class LoginController extends Controller
             'password' => $password
         ]);
         if ($login_email) {
-            return redirect()->route("dashboard.index")->with("success", "OK fine");
+            return redirect()->route("dashboard.index")->with("toast_success", "OK fine");
         }
         $user = User::where("email", $email)->first();
         if (!$user) {
-            return "Email không chính xác";
+            return redirect()->back()->with("toast_info" , "Sai email");
         }
         if (Hash::check($password, $user->password) == false) {
-            return "Password không chính xác";
+            return redirect()->back()->with("toast_info" , "Mật khẩu không chính xác");
         } else {
-            return "Tài khoản ko tồn tại hoặc có thể bị khóa vui lòng liên hệ lại với quản trị viên";
+            return redirect()->back()->with("toast-warning" , "Tài khoản bị khóa or không tồn tại");
         }
     }
 
-    public function register()
+    public function redirect()
     {
-        return view("login.register");
+        return Socialite::driver('google')->redirect();
     }
 
-    public function postRegister(PostRegister $request)
+    public function callback()
     {
-        $email = $request->input("email");
-        $name = $request->input("name");
-        $password = $request->input("password");
-        $data = [];
-        $data['name'] = $name;
-        $data['email'] = $email;
-        $data['password'] = Hash::make($password);
-        $this->register->store($data);
-        return redirect()->route("login.view");
+        try {
+            $user_google = Socialite::driver('google')->user();
+            $user_check = User::where('google_id', $user_google->id)->first();
+            if($user_check){
+                return redirect()->route("dashboard.index");
+            }else{
+                $newUser = new User();
+                $newUser->name = $user_google->name;
+                $newUser->email = $user_google->email;
+                $newUser->avatar = $user_google->avatar;
+                $newUser->google_id = $user_google->id;
+                $newUser->password = Hash::make('1234567');
+                $newUser->save();
+                Auth::login($newUser);
+                return redirect()->route("dashboard.index");
+            }
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
     }
 
     public function logout()
@@ -70,5 +74,7 @@ class LoginController extends Controller
         Auth::logout();
         return redirect()->route("login.view");
     }
+
+
 
 }
