@@ -2,9 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Facades\Socialite;
 
 class CheckLogin
 {
@@ -17,12 +19,10 @@ class CheckLogin
      */
     public function handle(Request $request, Closure $next)
     {
-        $user = Auth::check();
+        $user = Auth::user();
         if ($user) {
             return $next($request);
         }
-        if (!$user){
-            return redirect()->route("login.view");
-        }
+        return redirect()->route("login.view");
     }
 }

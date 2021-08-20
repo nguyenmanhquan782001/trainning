@@ -24,16 +24,17 @@ class PostLogin extends FormRequest
     public function rules()
     {
         return [
-            'email' => "required",
-            'password' => "required"
+            'email' => "required|email",
+            'password' => "required|min:6"
         ];
     }
-
     public function messages()
     {
         return [
             'email.required' => "Không được để trống email",
+            'email.email' => "Phải đúng định dạng email",
             'password.required' => "Chưa nhập mật khẩu",
+            'password.min' => "Password lớn hơn 6 kí tự"
         ];
     }
 

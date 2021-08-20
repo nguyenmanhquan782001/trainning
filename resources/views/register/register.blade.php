@@ -1,12 +1,13 @@
 @extends("login.layout")
+@section("title" , "Register")
 @section("login_or_register")
     <span class="login100-form-title p-b-41">
 					Register
 				</span>
     <form action="{{ route("register.post") }}" method="post" class="login100-form validate-form p-b-33 p-t-5">
         @csrf
-        <div class="wrap-input100 validate-input" data-validate="Enter username">
-            <input autocomplete="off" class="input100" type="email" name="email" placeholder="Email">
+        <div class="wrap-input100 validate-input" data-validate="Enter email">
+            <input value="{{ old("email") }}" autocomplete="off" class="input100" type="email" name="email" placeholder="Email">
             <span class="focus-input100" data-placeholder="&#xe82a;"></span>
         </div>
         @error('email')
@@ -14,7 +15,7 @@
         @enderror
 
         <div class="wrap-input100 validate-input" data-validate="Enter username">
-            <input autocomplete="off" class="input100" type="text" name="name" placeholder="username">
+            <input value="{{ old("name") }}" autocomplete="off" class="input100" type="text" name="name" placeholder="username">
             <span class="focus-input100" data-placeholder="&#xe82a;"></span>
         </div>
         @error('name')
@@ -22,20 +23,23 @@
         @enderror
 
         <div class="wrap-input100 validate-input" data-validate="Enter password">
-            <input class="input100" type="password" name="password" placeholder="Password">
+            <input value="{{ old("password") }}"
+                   class="input100"
+                   type="password"
+                   name="password"
+                   placeholder="Password">
             <span class="focus-input100" data-placeholder="&#xe80f;"></span>
         </div>
         @error('password')
         <i style="margin: 5px 15px; color: red">{{ $message }}</i>
         @enderror
         <div class="wrap-input100 validate-input" data-validate="Enter password">
-            <input class="input100" type="password" name="password_confirm" placeholder="Password confirm">
+            <input value="{{ old("password_confirm") }}" class="input100" type="password" name="password_confirm" placeholder="Password confirm">
             <span class="focus-input100" data-placeholder="&#xe80f;"></span>
         </div>
         @error('password_confirm')
         <i style="margin: 5px 15px; color: red">{{ $message }}</i>
         @enderror
-
         <div class="container-login100-form-btn m-t-32">
             <button type="submit" class="login100-form-btn">
                 Register
@@ -44,7 +48,6 @@
                 Login
             </a>
         </div>
-
     </form>
 @endsection
 

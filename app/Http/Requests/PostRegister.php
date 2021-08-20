@@ -28,7 +28,6 @@ class PostRegister extends FormRequest
             "name" => "required|min:6",
             "password" => "required|min:6",
             "password_confirm" => "required|same:password",
-
         ];
     }
     public  function messages()

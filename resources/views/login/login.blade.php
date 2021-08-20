@@ -1,4 +1,5 @@
 @extends("login.layout")
+@section("title" , "Login")
 @section("login_or_register")
     @if(session("success"))
 
@@ -8,8 +9,8 @@
 				</span>
     <form action="{{ route("login.post") }}" method="post" class="login100-form validate-form p-b-33 p-t-5">
         @csrf
-        <div class="wrap-input100 validate-input" data-validate="Enter username">
-            <input autocomplete="off" class="input100" type="email" name="email" placeholder="Email đăng nhập">
+        <div class="wrap-input100 validate-input" data-validate="Enter email">
+            <input value="{{ old("email") }}"  autocomplete="off" class="input100" type="email" name="email" placeholder="Email đăng nhập">
             <span class="focus-input100" data-placeholder="&#xe82a;"></span>
         </div>
         @error('email')
@@ -18,7 +19,7 @@
 
 
         <div class="wrap-input100 validate-input" data-validate="Enter password">
-            <input class="input100" type="password" name="password" placeholder="Password">
+            <input value="{{ old('password') }}" class="input100" type="password" name="password" placeholder="Password">
             <span class="focus-input100" data-placeholder="&#xe80f;"></span>
         </div>
         @error('password')

@@ -26,11 +26,15 @@ Route::get('/', function () {
 });
 
 Route::prefix("user")->group(function () {
+
     Route::get("/register", [RegisterController::class, 'register'])->name("register.view");
     Route::post("/register/post", [RegisterController::class, 'store'])->name("register.post");
 
+
     Route::get('/redirect', [LoginController::class , 'redirect'])->name("login.redirect");
     Route::get('/callback', [LoginController::class , 'callback'])->name("login.callback");
+    Route::get("/forgot", [LoginController::class , 'forgot'])->name("forgot");
+    Route::post("/refresh" , [LoginController::class , 'changePassword'])->name("change");
 
     Route::get("/login", [LoginController::class, 'login'])->name("login.view");
     Route::post("/post/login", [LoginController::class, 'store'])->name("login.post");
