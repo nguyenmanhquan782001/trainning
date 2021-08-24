@@ -38,8 +38,23 @@ class RegisterController extends Controller
         $data['email'] = $email;
         $data['password'] = Hash::make($password);
         $this->register->store($data);
-//        SendEmail::dispatch($email, $name)->delay(now()->addMinute(10));
-        return redirect()->back()->with("toast_success", 'Đăng kí thành công check email để xác nhận');
+        Auth::attempt([
+            'email' => $email,
+            'password' => $password,
+        ]);
+        Mail::to("$email")->send(new SendMail());
+        return redirect()->back()->with("toast_success", 'Đăng kí thành công ! check email để xác nhận');
+    }
+
+    public function verification()
+    {
+        $user = \auth()->user();
+        $user_check = User::find($user->id);
+        if ($user_check) {
+            $user_check->status = 1 ;
+            $user_check->save();
+        }
+        return redirect()->route("login.view")->with("toast_success", "Đã xác minh tài khoản mời đăng nhập");
     }
 
 

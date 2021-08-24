@@ -115,7 +115,7 @@ class AuthController extends Controller
         $user = User::where("id", $userId)->update([
             'password' => Hash::make($request->password),
         ]);
-        return response()->json(['message' => "Đổi mật khẩu thành công" , 'user' => $user]);
+        return response()->json(['message' => "Đổi mật khẩu thành công", 'user' => $user]);
     }
 
 

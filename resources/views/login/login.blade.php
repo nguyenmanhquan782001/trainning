@@ -40,7 +40,7 @@
             <br>
             <div style="margin-top: 20px ; opacity: 0.7" >
                 <span> Google + </span>
-                <a style="color: blue" href="">Quên mật khẩu</a>
+                <a style="color: blue" href="{{ route("forgot.pass") }}">Quên mật khẩu</a>
             </div>
 
         </div>

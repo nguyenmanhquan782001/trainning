@@ -41,6 +41,8 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'created_at' => 'date:Y-m-d',
+        'deleted_at' => 'date:Y-m-d'
     ];
     public function getJWTIdentifier() {
         return $this->getKey();
@@ -54,4 +56,8 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims() {
         return [];
     }
+    public  function posts() {
+        return $this->hasMany(Post::class , 'user_id');
+    }
+
 }

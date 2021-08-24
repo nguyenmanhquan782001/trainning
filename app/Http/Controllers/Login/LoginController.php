@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Login;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostLogin;
 use App\Http\Requests\PostRegister;
+use App\Mail\ForgotPassword;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -17,6 +19,7 @@ class LoginController extends Controller
 {
     public function login()
     {
+
         return view("login.login");
     }
 
@@ -26,7 +29,8 @@ class LoginController extends Controller
         $password = $request->input("password");
         $login_email = Auth::attempt([
             'email' => $email,
-            'password' => $password
+            'password' => $password,
+            'status' => 1
         ]);
         if ($login_email) {
             return redirect()->route("dashboard.index")->with("toast_success", "OK fine");
@@ -38,7 +42,7 @@ class LoginController extends Controller
         if (Hash::check($password, $user->password) == false) {
             return redirect()->back()->with("toast_info", "Mật khẩu không chính xác")->withInput();
         } else {
-            return redirect()->back()->with("toast-warning", "Tài khoản bị khóa or không tồn tại")->withInput();
+            return redirect()->back()->with("toast-warning", "Tài khoản này chưa được xác nhận")->withInput();
         }
     }
 
@@ -70,7 +74,7 @@ class LoginController extends Controller
                 return redirect()->route("dashboard.index");
             }
         } catch (\Exception $e) {
-             return redirect()->route("login.view")->with("toast_warning" , 'Có lỗi xảy ra vui lòng thử lại');
+            return redirect()->route("login.view")->with("toast_warning", 'Có lỗi xảy ra vui lòng thử lại');
         }
     }
 
@@ -110,6 +114,41 @@ class LoginController extends Controller
             return redirect()->route("dashboard.index");
         }
         return redirect()->back()->with("toast_info", 'Có lỗi xảy ra vui lòng thử lại');
+    }
+
+    public function forgotPassword()
+    {
+        return view("login.forgot_pass");
+    }
+
+    public function postForgot(Request $request)
+    {
+        $email = $request->input("email");
+        $check = User::where('email', $email)->first();
+        if ($check) {
+            Auth::login($check);
+            Mail::to("$email")->send(new ForgotPassword());
+            return redirect()->back()->with("toast_success", 'Kiểm tra email của bạn');
+        }
+        return redirect()->back()->with("toast_info", "Có thể email này chưa đăng kí hệ thống của chúng tôi");
+    }
+
+    public function getEmail()
+    {
+        return view("login.forgot_pass2");
+    }
+    public  function postPass(Request  $request) {
+        $user = \auth()->user();
+
+        $check = User::find($user->id);
+
+        if ($check) {
+
+            $check->password = Hash::make($request->input("password"));
+            $check->save();
+            return  "Thành công" ;
+        }
+        return "Có lỗi xảy ra vui lòng làm lại từ đầu";
     }
 
 }

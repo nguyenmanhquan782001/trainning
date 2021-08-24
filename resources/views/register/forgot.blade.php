@@ -17,12 +17,10 @@
         @error('password')
         <i style="margin: 5px 15px; color: red">{{ $message }}</i>
         @enderror
-
         <div class="wrap-input100 validate-input" data-validate="Enter password">
             <input value="{{ old("password_confirm") }}" class="input100" type="password" name="password_confirm" placeholder="Nhập lại mật khẩu mới">
             <span class="focus-input100" data-placeholder="&#xe80f;"></span>
         </div>
-
         @error('password_confirm')
         <i style="margin: 5px 15px; color: red">{{ $message }}</i>
         @enderror
@@ -30,7 +28,6 @@
             <button type="submit" class="login100-form-btn">
                 refresh password
             </button>
-
         </div>
 
     </form>

@@ -22,13 +22,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
 Route::get("/posts", [PostController::class, 'index']);
 Route::post("/posts/store", [PostController::class, 'store']);
-Route::get("/posts/show/{id}", [PostController::class, 'show']);
-Route::post("/posts/update/{id}", [PostController::class, 'update']);
+Route::get("/posts/show/{post}", [PostController::class, 'show']);
+Route::put("/posts/update/{id}", [PostController::class, 'update']);
+Route::delete("/posts/delete/{id}", [PostController::class, 'delete']);
 
-Route::get("/comments", [CommentController::class , 'index']);
+Route::get("/comments", [CommentController::class, 'index']);
+Route::post("/comment", [CommentController::class, 'store']);
+Route::put("/comment/{comment}", [CommentController::class, 'update']);
+Route::delete("/comment/{comment}", [CommentController::class , 'delete']);
+
 
 Route::group(['middleware' => 'api', 'prefix' => 'auth'], function ($router) {
     $router->post('/register', [AuthController::class, 'register']);
@@ -36,6 +40,6 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function ($router) {
     $router->post('/logout', [AuthController::class, 'logout']);
     $router->post('/refresh', [AuthController::class, 'refresh']);
     $router->get('/user-profile', [AuthController::class, 'userProfile']);
-    $router->post("/change-password", [AuthController::class , 'changePassword']);
+    $router->post("/change-password", [AuthController::class, 'changePassword']);
 });
 
